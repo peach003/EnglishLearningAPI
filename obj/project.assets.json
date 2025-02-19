@@ -4375,11 +4375,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\WD\\EnglishLearningAPI\\EnglishLearningAPI.csproj",
+      "projectUniqueName": "C:\\Users\\WD\\EnglishLearningAPI\\Backend\\EnglishLearningAPI\\EnglishLearningAPI.csproj",
       "projectName": "EnglishLearningAPI",
-      "projectPath": "C:\\Users\\WD\\EnglishLearningAPI\\EnglishLearningAPI.csproj",
+      "projectPath": "C:\\Users\\WD\\EnglishLearningAPI\\Backend\\EnglishLearningAPI\\EnglishLearningAPI.csproj",
       "packagesPath": "C:\\Users\\WD\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\WD\\EnglishLearningAPI\\obj\\",
+      "outputPath": "C:\\Users\\WD\\EnglishLearningAPI\\Backend\\EnglishLearningAPI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\WD\\AppData\\Roaming\\NuGet\\NuGet.Config"

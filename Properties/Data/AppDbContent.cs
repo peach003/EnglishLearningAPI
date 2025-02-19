@@ -11,7 +11,8 @@ namespace EnglishLearningAPI.Data
 
     public class ApplicationUser : IdentityUser
     {
-        public string FullName { get; set; } = string.Empty; // 修复 CS8618
+        public string FullName { get; set; } = string.Empty; // 避免 CS8618
     }
 }
+
 

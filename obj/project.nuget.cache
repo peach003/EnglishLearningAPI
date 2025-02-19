@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "px79i8qsDkC8fyS2lxuCHFR6hxRT9toSvAno8EIAYi41xpYo7/v1GoAlhkHuzBy/sRzRr+7PTve5OwrjjOR1Ng==",
+  "dgSpecHash": "jtLIoSFMLe8nwcxuAgAoLjd/6SOLH7o7fJ9NojBbmGjJHhuB1NBqySPdkB2TFmw5yZUJZuusaT6nRmMuQcajlw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\WD\\EnglishLearningAPI\\EnglishLearningAPI.csproj",
+  "projectFilePath": "C:\\Users\\WD\\EnglishLearningAPI\\Backend\\EnglishLearningAPI\\EnglishLearningAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\WD\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\WD\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

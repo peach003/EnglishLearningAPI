@@ -45,6 +45,8 @@ C:\Users\WD\EnglishLearningAPI\Backend\EnglishLearningAPI\bin\Debug\net8.0\Micro
 C:\Users\WD\EnglishLearningAPI\Backend\EnglishLearningAPI\bin\Debug\net8.0\Microsoft.SqlServer.Server.dll
 C:\Users\WD\EnglishLearningAPI\Backend\EnglishLearningAPI\bin\Debug\net8.0\Microsoft.Win32.SystemEvents.dll
 C:\Users\WD\EnglishLearningAPI\Backend\EnglishLearningAPI\bin\Debug\net8.0\Mono.TextTemplating.dll
+C:\Users\WD\EnglishLearningAPI\Backend\EnglishLearningAPI\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\WD\EnglishLearningAPI\Backend\EnglishLearningAPI\bin\Debug\net8.0\RestSharp.dll
 C:\Users\WD\EnglishLearningAPI\Backend\EnglishLearningAPI\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\WD\EnglishLearningAPI\Backend\EnglishLearningAPI\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\WD\EnglishLearningAPI\Backend\EnglishLearningAPI\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll

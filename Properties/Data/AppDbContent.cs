@@ -1,18 +1,17 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using EnglishLearningAPI.Models;
 
 namespace EnglishLearningAPI.Data
 {
     public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-    }
 
-    public class ApplicationUser : IdentityUser
-    {
-        public string FullName { get; set; } = string.Empty; // 避免 CS8618
+        public DbSet<PersonalWord> PersonalWords { get; set; } = null!;
+        public DbSet<ReviewPlan> ReviewPlans { get; set; } = null!;
     }
 }
+
 
 

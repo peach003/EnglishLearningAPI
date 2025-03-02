@@ -22,13 +22,17 @@ namespace EnglishLearningAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("EnglishLearningAPI.Data.ApplicationUser", b =>
+            modelBuilder.Entity("EnglishLearningAPI.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("AvatarUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -89,6 +93,58 @@ namespace EnglishLearningAPI.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("EnglishLearningAPI.Models.PersonalWord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Familiarity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Meaning")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Word")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PersonalWords");
+                });
+
+            modelBuilder.Entity("EnglishLearningAPI.Models.ReviewPlan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Completed")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("ReviewDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("WordId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ReviewPlans");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -235,7 +291,7 @@ namespace EnglishLearningAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("EnglishLearningAPI.Data.ApplicationUser", null)
+                    b.HasOne("EnglishLearningAPI.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -244,7 +300,7 @@ namespace EnglishLearningAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("EnglishLearningAPI.Data.ApplicationUser", null)
+                    b.HasOne("EnglishLearningAPI.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -259,7 +315,7 @@ namespace EnglishLearningAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EnglishLearningAPI.Data.ApplicationUser", null)
+                    b.HasOne("EnglishLearningAPI.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -268,7 +324,7 @@ namespace EnglishLearningAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("EnglishLearningAPI.Data.ApplicationUser", null)
+                    b.HasOne("EnglishLearningAPI.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

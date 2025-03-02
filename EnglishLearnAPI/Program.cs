@@ -1,5 +1,5 @@
 using EnglishLearningAPI.Data;
-using EnglishLearningAPI.Models;  // ✅ 确保正确引用
+using EnglishLearningAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -8,16 +8,32 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ✅ 1️⃣ 配置数据库
+// ✅ 1️⃣ 配置 CORS 允许前端访问
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        builder => builder
+            .WithOrigins("http://localhost:3000") // ✅ 确保 React 前端能访问
+            .AllowAnyMethod() // ✅ 允许所有 HTTP 方法
+            .AllowAnyHeader() // ✅ 允许所有 Headers
+            .AllowCredentials()); // ✅ 允许携带身份凭证 (Cookies, Auth Headers)
+});
+
+// ✅ 2️⃣ 配置数据库
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// ✅ 2️⃣ 配置身份认证
+// ✅ 3️⃣ 配置 ASP.NET Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
-// ✅ 3️⃣ 配置 JWT 认证
+// ✅ 4️⃣ 启用日志
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.SetMinimumLevel(LogLevel.Debug); 
+
+// ✅ 5️⃣ 配置 JWT 认证
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var key = jwtSettings["Key"];
 
@@ -46,16 +62,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// ✅ 4️⃣ 注册控制器和 Swagger
+// ✅ 6️⃣ 配置 API 控制器和 Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// ✅ 5️⃣ 启动 API 配置
+// ✅ 7️⃣ 确保 `CORS` 在 `Routing` 之前
+app.UseCors("AllowFrontend");
+
 app.UseRouting();
-app.UseAuthentication(); // 启用身份验证
+app.UseAuthentication(); // 启用 JWT 认证
 app.UseAuthorization();
 app.UseSwagger();
 app.UseSwaggerUI();

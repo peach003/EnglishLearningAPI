@@ -24,7 +24,7 @@ namespace EnglishLearningAPI.Controllers
             _configuration = configuration;
         }
 
-        // ✅ 用户注册接口
+        // 用户注册接口
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
@@ -41,8 +41,8 @@ namespace EnglishLearningAPI.Controllers
             {
                 UserName = model.Email,
                 Email = model.Email,
-                FullName = string.IsNullOrEmpty(model.FullName) ? "Anonymous User" : model.FullName, // ✅ 默认值
-                AvatarUrl = "/assets/avatar.png" // ✅ 默认头像
+                FullName = string.IsNullOrEmpty(model.FullName) ? "Anonymous User" : model.FullName, // 默认值
+                AvatarUrl = "/assets/avatar.png" //  默认头像
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -52,7 +52,7 @@ namespace EnglishLearningAPI.Controllers
             return Ok(new { message = "User registered successfully!" });
         }
 
-        // ✅ 用户登录接口
+        // 用户登录接口
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
@@ -112,7 +112,7 @@ namespace EnglishLearningAPI.Controllers
             {
                 new Claim(ClaimTypes.Name, user.UserName ?? ""),
                 new Claim(ClaimTypes.NameIdentifier, user.Id ?? ""),
-                new Claim("FullName", user.FullName ?? "Anonymous User"), // ✅ 添加 `FullName` 声明
+                new Claim("FullName", user.FullName ?? "Anonymous User"), //  添加 `FullName` 声明
                 new Claim(JwtRegisteredClaimNames.Email, user.Email ?? ""),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };

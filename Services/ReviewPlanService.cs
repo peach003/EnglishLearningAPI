@@ -1,5 +1,5 @@
 using EnglishLearningAPI.Data;
-using EnglishLearningAPI.Models;  // ✅ 确保正确引用
+using EnglishLearningAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,55 +17,51 @@ namespace EnglishLearningAPI.Services
             _context = context;
         }
 
-        public async Task GenerateReviewPlanAsync(string userId)
+        // 获取不同单词本的单词
+        public async Task<List<PersonalWord>> GetWordsByCategoryAsync(string userId, string category)
         {
-            var words = await _context.PersonalWords
-                .Where(w => w.UserId == userId)
-                .ToListAsync();
-
-            var today = DateTime.UtcNow;
-
-            foreach (var word in words)
+            if (string.IsNullOrEmpty(userId))
             {
-                int[] reviewIntervals;
-
-                // 根据熟练度动态调整复习间隔
-                if (word.Familiarity == 0)
-                    reviewIntervals = new int[] { 0, 1, 3, 7, 14 }; // 新学单词
-                else if (word.Familiarity >= 3)
-                    reviewIntervals = new int[] { 0, 2, 5, 10, 21 }; // 熟悉单词
-                else
-                    reviewIntervals = new int[] { 0, 3, 7, 14, 28 }; // 半熟练单词
-
-                foreach (var interval in reviewIntervals)
-                {
-                    var reviewDate = today.AddDays(interval);
-
-                    var existingPlan = await _context.ReviewPlans
-                        .FirstOrDefaultAsync(r => r.UserId == userId && r.WordId == word.Id && r.ReviewDate == reviewDate);
-                    
-                    if (existingPlan == null)
-                    {
-                        _context.ReviewPlans.Add(new ReviewPlan
-                        {
-                            UserId = userId,
-                            WordId = word.Id,
-                            ReviewDate = reviewDate,
-                            Completed = false
-                        });
-                    }
-                }
+                throw new ArgumentException("User ID cannot be null or empty");
             }
 
-            await _context.SaveChangesAsync();
+            // **确保 UserId 是 string 类型，避免 int 转换错误**
+            IQueryable<PersonalWord> query = _context.PersonalWords.Where(w => w.UserId == userId);
+
+            var today = DateTime.UtcNow;
+            DateTime newWordsThreshold = today.AddDays(-14);
+            DateTime beginnerThreshold = today.AddDays(-28);
+            DateTime intermediateThreshold = today.AddDays(-60);
+            DateTime advancedThreshold = today.AddDays(-180);
+
+            switch (category.ToLower())
+            {
+                case "new":
+                    query = query.Where(w => w.LastReviewed >= newWordsThreshold);
+                    break;
+                case "beginner":
+                    query = query.Where(w => w.LastReviewed >= beginnerThreshold);
+                    break;
+                case "intermediate":
+                    query = query.Where(w => w.LastReviewed >= intermediateThreshold);
+                    break;
+                case "advanced":
+                    query = query.Where(w => w.LastReviewed >= advancedThreshold);
+                    break;
+                case "recommended":
+                    query = ApplySmartRecommendation(query);
+                    break;
+                default:
+                    throw new ArgumentException("Invalid category");
+            }
+
+            return await query.ToListAsync();
         }
 
-        public async Task<List<ReviewPlan>> GetUserReviewPlans(string userId)
+        // **推荐单词本 (智能算法)**
+        private IQueryable<PersonalWord> ApplySmartRecommendation(IQueryable<PersonalWord> query)
         {
-            return await _context.ReviewPlans
-                .Where(r => r.UserId == userId && r.ReviewDate >= DateTime.UtcNow && !r.Completed)
-                .OrderBy(r => r.ReviewDate)
-                .ToListAsync();
+            return query.OrderBy(w => w.FamiliarityLevel).ThenBy(w => w.LastReviewed);
         }
     }
 }

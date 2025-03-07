@@ -25,43 +25,28 @@ namespace EnglishLearningAPI.Services
                 throw new ArgumentException("User ID cannot be null or empty");
             }
 
-            // **确保 UserId 是 string 类型，避免 int 转换错误**
-            IQueryable<PersonalWord> query = _context.PersonalWords.Where(w => w.UserId == userId);
+            // **确保 UserId 类型匹配**
+            if (!int.TryParse(userId, out int parsedUserId))
+            {
+                throw new ArgumentException("Invalid User ID format");
+            }
 
-            var today = DateTime.UtcNow;
-            DateTime newWordsThreshold = today.AddDays(-14);
-            DateTime beginnerThreshold = today.AddDays(-28);
-            DateTime intermediateThreshold = today.AddDays(-60);
-            DateTime advancedThreshold = today.AddDays(-180);
+            IQueryable<PersonalWord> query = _context.PersonalWords.Where(w => w.UserId == parsedUserId);
 
             switch (category.ToLower())
             {
+                case "all":
+                    // 返回所有单词
+                    break;
                 case "new":
-                    query = query.Where(w => w.LastReviewed >= newWordsThreshold);
-                    break;
-                case "beginner":
-                    query = query.Where(w => w.LastReviewed >= beginnerThreshold);
-                    break;
-                case "intermediate":
-                    query = query.Where(w => w.LastReviewed >= intermediateThreshold);
-                    break;
-                case "advanced":
-                    query = query.Where(w => w.LastReviewed >= advancedThreshold);
-                    break;
-                case "recommended":
-                    query = ApplySmartRecommendation(query);
+                    // 可以添加新的分类逻辑，例如最近添加的单词
+                    query = query.OrderByDescending(w => w.Id).Take(20);
                     break;
                 default:
                     throw new ArgumentException("Invalid category");
             }
 
             return await query.ToListAsync();
-        }
-
-        // **推荐单词本 (智能算法)**
-        private IQueryable<PersonalWord> ApplySmartRecommendation(IQueryable<PersonalWord> query)
-        {
-            return query.OrderBy(w => w.FamiliarityLevel).ThenBy(w => w.LastReviewed);
         }
     }
 }

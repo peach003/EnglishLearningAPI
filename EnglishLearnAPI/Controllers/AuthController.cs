@@ -24,7 +24,7 @@ namespace EnglishLearningAPI.Controllers
             _configuration = configuration;
         }
 
-        // 用户注册接口
+        // user registration interface
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
@@ -52,7 +52,7 @@ namespace EnglishLearningAPI.Controllers
             return Ok(new { message = "User registered successfully!" });
         }
 
-        // 用户登录接口
+        // User Login Interface
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
@@ -71,13 +71,13 @@ namespace EnglishLearningAPI.Controllers
             return Ok(new 
             { 
                 token,
-                fullName = user.FullName,  // ✅ 让前端可以获取 `fullName`
+                fullName = user.FullName,  
                 email = user.Email,
                 avatarUrl = user.AvatarUrl
             });
         }
 
-        // ✅ 获取用户资料
+        //  Access to user information
         [HttpGet("profile")]
         public async Task<IActionResult> GetProfile()
         {

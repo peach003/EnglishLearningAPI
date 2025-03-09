@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using EnglishLearningAPI.Data;  // ⚠️ 确保正确引用
-using EnglishLearningAPI.Models; // ⚠️ 引用 PersonalWord 模型
+using EnglishLearningAPI.Data;  
+using EnglishLearningAPI.Models; 
 
 namespace EnglishLearningAPI.Controllers
 {
@@ -16,7 +16,7 @@ namespace EnglishLearningAPI.Controllers
             _context = context;
         }
 
-        // 添加单词到 PersonalWords 表
+        // Add words to the PersonalWords table
         [HttpPost("add")]
         public async Task<IActionResult> AddWord([FromBody] PersonalWord wordEntry)
         {
@@ -31,7 +31,7 @@ namespace EnglishLearningAPI.Controllers
             return Ok(new { message = "Word added successfully." });
         }
 
-        // 获取用户的单词列表
+        // Get user's word list
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetWords(int userId)
         {
@@ -47,7 +47,7 @@ namespace EnglishLearningAPI.Controllers
         {
             var words = await _context.PersonalWords
                 .Where(w => w.UserId == userId)
-                .Select(w => new { w.Word }) // 仅返回单词
+                .Select(w => new { w.Word }) 
                 .ToListAsync();
 
             return Ok(words);

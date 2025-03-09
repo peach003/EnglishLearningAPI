@@ -1,6 +1,6 @@
 using EnglishLearningAPI.Data;
 using EnglishLearningAPI.Models;
-using EnglishLearningAPI.Services; // 引入 DictionaryService 所在的命名空间
+using EnglishLearningAPI.Services; 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -9,32 +9,32 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 配置 CORS 允许前端访问
+// Configure CORS to allow front-end access
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
         policyBuilder => policyBuilder
-            .WithOrigins("http://localhost:3000") // 确保 React 前端能访问
-            .AllowAnyMethod() // 允许所有 HTTP 方法
-            .AllowAnyHeader() // 允许所有 Headers
-            .AllowCredentials()); // 允许携带身份凭证 (Cookies, Auth Headers)
+            .WithOrigins("http://localhost:3000") 
+            .AllowAnyMethod() 
+            .AllowAnyHeader() 
+            .AllowCredentials()); 
 });
 
-// 配置数据库
+// Configuration database
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// 配置 ASP.NET Identity
+// Configuring ASP.NET Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
-// 🔹 启用日志
+// Enable logging
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.SetMinimumLevel(LogLevel.Debug);
 
-// 配置 JWT 认证
+// Configure JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var key = jwtSettings["Key"];
 
@@ -63,21 +63,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// 🔹 添加 `HttpClient` 供 `AudioController.cs` 调用 Deepgram API
+// Add `HttpClient` for `AudioController.cs` to call the Deepgram API
 builder.Services.AddHttpClient();
 
-// 🔹 配置 API 控制器和 Swagger
+// Configuring the API Controller and Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// 🔹 确保 CORS 在 Routing 之前
+// Ensure that CORS is before Routing
 app.UseCors("AllowFrontend");
 
 app.UseRouting();
-app.UseAuthentication(); // 启用 JWT 认证
+app.UseAuthentication(); 
 app.UseAuthorization();
 app.UseSwagger();
 app.UseSwaggerUI();

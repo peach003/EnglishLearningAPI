@@ -251,7 +251,7 @@ namespace EnglishLearningAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PersonalWords");
+                    b.ToTable("PersonalWords", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

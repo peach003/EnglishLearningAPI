@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\WD\\EnglishLearningAPI\\Backend\\EnglishLearningAPI\\EnglishLearningAPI.csproj": {}
+    "C:\\Users\\WD\\ELbackend\\Code-LinZhang\\Code-LynnZhang\\EnglishLearningAPI\\EnglishLearningAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\WD\\EnglishLearningAPI\\Backend\\EnglishLearningAPI\\EnglishLearningAPI.csproj": {
+    "C:\\Users\\WD\\ELbackend\\Code-LinZhang\\Code-LynnZhang\\EnglishLearningAPI\\EnglishLearningAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\WD\\EnglishLearningAPI\\Backend\\EnglishLearningAPI\\EnglishLearningAPI.csproj",
+        "projectUniqueName": "C:\\Users\\WD\\ELbackend\\Code-LinZhang\\Code-LynnZhang\\EnglishLearningAPI\\EnglishLearningAPI.csproj",
         "projectName": "EnglishLearningAPI",
-        "projectPath": "C:\\Users\\WD\\EnglishLearningAPI\\Backend\\EnglishLearningAPI\\EnglishLearningAPI.csproj",
+        "projectPath": "C:\\Users\\WD\\ELbackend\\Code-LinZhang\\Code-LynnZhang\\EnglishLearningAPI\\EnglishLearningAPI.csproj",
         "packagesPath": "C:\\Users\\WD\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\WD\\EnglishLearningAPI\\Backend\\EnglishLearningAPI\\obj\\",
+        "outputPath": "C:\\Users\\WD\\ELbackend\\Code-LinZhang\\Code-LynnZhang\\EnglishLearningAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\WD\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -38,9 +38,17 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Hangfire": {
+              "target": "Package",
+              "version": "[1.8.18, )"
+            },
+            "Hangfire.SqlServer": {
+              "target": "Package",
+              "version": "[1.8.18, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
-              "version": "[8.*, )"
+              "version": "[8.0.0, )"
             },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
@@ -68,6 +76,10 @@
               "target": "Package",
               "version": "[13.0.3, )"
             },
+            "Python.Runtime": {
+              "target": "Package",
+              "version": "[2.7.9, )"
+            },
             "RestSharp": {
               "target": "Package",
               "version": "[112.1.0, )"
@@ -75,6 +87,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.6.2, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.6.1, )"
             },
             "System.Net.WebSockets": {
               "target": "Package",

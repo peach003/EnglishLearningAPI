@@ -52,5 +52,31 @@ namespace EnglishLearningAPI.Controllers
 
             return Ok(words);
         }
+        [HttpPost("click")]
+public async Task<IActionResult> RecordClick([FromBody] ClickLog request)
+{
+    var wordEntry = await _context.PersonalWords
+        .FirstOrDefaultAsync(w => w.UserId == request.UserId && w.Word == request.Word);
+
+    if (wordEntry == null)
+    {
+        return NotFound("Word not found for this user.");
+    }
+
+    // **记录点击**
+    var clickLog = new ClickLog
+    {
+        UserId = request.UserId,
+        Word = request.Word
+    };
+    _context.ClickLogs.Add(clickLog);
+
+    // **增加熟悉度**
+    wordEntry.Familiarity += 1;
+
+    await _context.SaveChangesAsync();
+    return Ok(new { message = "Click recorded and Familiarity updated!", Familiarity = wordEntry.Familiarity });
+}
+
     }
 }

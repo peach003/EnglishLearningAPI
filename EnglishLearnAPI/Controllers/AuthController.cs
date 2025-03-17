@@ -4,8 +4,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using EnglishLearningAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EnglishLearningAPI.Controllers
 {
@@ -62,8 +62,9 @@ namespace EnglishLearningAPI.Controllers
             }
 
             var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null) return Unauthorized(new { error = "Invalid credentials" });
 
+            if (user == null) return Unauthorized(new { error = "Invalid credentials" });
+            
             var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
             if (!result.Succeeded) return Unauthorized(new { error = "Invalid credentials" });
 
@@ -78,9 +79,12 @@ namespace EnglishLearningAPI.Controllers
         }
 
         //  Access to user information
+        [Authorize]
         [HttpGet("profile")]
         public async Task<IActionResult> GetProfile()
         {
+
+
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null) return Unauthorized(new { error = "Invalid token" });
 
@@ -94,25 +98,57 @@ namespace EnglishLearningAPI.Controllers
                 avatarUrl = user.AvatarUrl
             });
         }
-
-        private string GenerateJwtToken(ApplicationUser user)
+        public string GenerateJwtToken(ApplicationUser user)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
-            var key = jwtSettings["Key"];
-            var issuer = jwtSettings["Issuer"];
-            var audience = jwtSettings["Audience"];
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id), 
+                new Claim(ClaimTypes.Name, user.UserName), // 用户名
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), // JWT ID
+                new Claim("FullName", user.FullName ?? "Anonymous User"),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email ?? ""),
+            };
+    
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+    
+            var token = new JwtSecurityToken(
+                issuer: jwtSettings["Issuer"], // 发行者
+                audience: jwtSettings["Audience"], // 受众
+                claims: claims,
+                expires: DateTime.Now.AddHours(2), // 设置有效期为1小时
+                signingCredentials: creds // 签名凭证
+            );
+    
+            return new JwtSecurityTokenHandler().WriteToken(token); // 返回生成的JWT
+        }
+
+        private string GenerateJwtToken1(ApplicationUser user)
+        {
+            var jwtSettings = _configuration.GetSection("JwtSettings");
+            var key         = jwtSettings["Key"];
+            var issuer      = jwtSettings["Issuer"];
+            var audience    = jwtSettings["Audience"];
 
             if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(issuer) || string.IsNullOrEmpty(audience))
             {
                 throw new InvalidOperationException("JWT configuration is missing.");
             }
 
-            var keyBytes = Encoding.UTF8.GetBytes(key);
+            // 确保用户ID有效
+            if (string.IsNullOrEmpty(user.Id))
+            {
+                throw new ArgumentException("User ID cannot be null or empty.");
+            }
+
             var claims = new[]
             {
+                new Claim(ClaimTypes.NameIdentifier, user.Id), 
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id), // ✅ `sub` 也存 `UserId`
                 new Claim(ClaimTypes.Name, user.UserName ?? ""),
-                new Claim(ClaimTypes.NameIdentifier, user.Id ?? ""),
-                new Claim("FullName", user.FullName ?? "Anonymous User"), //  添加 `FullName` 声明
+                new Claim("FullName", user.FullName ?? "Anonymous User"),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email ?? ""),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
@@ -122,10 +158,14 @@ namespace EnglishLearningAPI.Controllers
                 audience: audience,
                 claims: claims,
                 expires: DateTime.UtcNow.AddHours(2),
-                signingCredentials: new SigningCredentials(new SymmetricSecurityKey(keyBytes), SecurityAlgorithms.HmacSha256)
+                signingCredentials: new SigningCredentials(
+                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"])), 
+                    SecurityAlgorithms.HmacSha256
+                )
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+            
         }
     }
 }

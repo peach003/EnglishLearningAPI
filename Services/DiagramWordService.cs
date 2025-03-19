@@ -16,17 +16,17 @@ public class DiagramWordService
     }
 
     /// <summary>
-    /// 获取最近 10 天每天新增的 DiagramWord 数量
+    /// Get the number of DiagramWords added each day in the last 10 days
     /// </summary>
     public async Task<List<DiagramWordStatsDto>> GetLast10DaysStatsAsync()
     {
         var today = DateTime.UtcNow.Date;
-        var startDate = today.AddDays(-9);  // 10 天前的日期（包含今天）
+        var startDate = today.AddDays(-9);  // Date 10 days ago (including today)
 
-        // 获取 10 天内的数据并按日期统计
+        // Get data for the last 10 days and group by date
         var wordCounts = await _context.DiagramWords
-            .Where(w => w.CreatedAt >= startDate)  // 过滤 10 天内的数据
-            .GroupBy(w => w.CreatedAt.Date)        // 按日期分组
+            .Where(w => w.CreatedAt >= startDate)  // Filter data from the last 10 days
+            .GroupBy(w => w.CreatedAt.Date)        // Group by date
             .Select(g => new 
             {
                 Date = g.Key,
@@ -34,7 +34,7 @@ public class DiagramWordService
             })
             .ToDictionaryAsync(x => x.Date.ToString("yyyy-MM-dd"), x => x.WordCount); 
 
-        // 构建完整的 10 天数据，确保每一天都有数据（即使是 0）
+        // Build the complete 10 days data, ensuring every day has data (even if it's 0)
         return Enumerable.Range(0, 10)
             .Select(i =>
             {

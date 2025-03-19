@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EnglishLearningAPI.Data; 
+using EnglishLearningAPI.Data;
 
 [Route("api/recommendword")]
 [ApiController]
@@ -20,11 +20,11 @@ public class RecommendWordController : ControllerBase
     }
 
     /// <summary>
-    /// 获取推荐单词
+    /// Get recommended words
     /// </summary>
-    /// <param name="pastWords">用户过去学习过的单词，逗号分隔</param>
-    /// <param name="numWords">需要推荐的单词数量（默认5个）</param>
-    /// <returns>返回推荐的单词列表</returns>
+    /// <param name="pastWords">The words the user has learned in the past, separated by commas</param>
+    /// <param name="numWords">The number of words to recommend (default is 5)</param>
+    /// <returns>Returns a list of recommended words</returns>
     [HttpGet("recommendations")]
     public async Task<IActionResult> GetRecommendedWords(
         [FromQuery] string? pastWords = "",  
@@ -32,7 +32,7 @@ public class RecommendWordController : ControllerBase
     {
         if (string.IsNullOrWhiteSpace(pastWords))
         {
-            // **自动填充最近的 3 个单词**
+            // **Automatically populate the latest 3 words**
             var latestWords = await _context.PersonalWords
                 .OrderByDescending(w => w.CreatedAt)
                 .Select(w => w.Word)
@@ -56,7 +56,7 @@ public class RecommendWordController : ControllerBase
 
         try
         {
-            // **🔹 调用 Python API 进行预测**
+            // **🔹 Call Python API for predictions**
             var recommendations = await _recommendWordService.GetRecommendedWords(wordsArray, numWords);
 
             return Ok(new { status = "success", recommendedWords = recommendations });

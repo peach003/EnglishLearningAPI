@@ -14,7 +14,7 @@ public class DiagramWordController : ControllerBase
     }
 
     /// <summary>
-    /// 获取最近 10 天 `DiagramWord` 新增数量
+    /// Get the number of new DiagramWord entries in the last 10 days.
     /// </summary>
     [HttpGet("stats/last10days")]
     public async Task<IActionResult> GetLast10DaysStats()

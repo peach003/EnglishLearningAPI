@@ -12,7 +12,7 @@ public class RecommendWordService
         _httpClient = httpClient;
     }
 
-    // **✅ 通过 FastAPI 获取推荐单词**
+    // Get recommended words via FastAPI
     public async Task<List<string>> GetRecommendedWords(string[] pastWords, int numWords)
     {
         string wordList = string.Join(",", pastWords);

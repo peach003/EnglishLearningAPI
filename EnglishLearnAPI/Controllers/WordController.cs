@@ -63,7 +63,7 @@ public async Task<IActionResult> RecordClick([FromBody] ClickLog request)
         return NotFound("Word not found for this user.");
     }
 
-    // **记录点击**
+    
     var clickLog = new ClickLog
     {
         UserId = request.UserId,
@@ -71,7 +71,7 @@ public async Task<IActionResult> RecordClick([FromBody] ClickLog request)
     };
     _context.ClickLogs.Add(clickLog);
 
-    // **增加熟悉度**
+    
     wordEntry.Familiarity += 1;
 
     await _context.SaveChangesAsync();

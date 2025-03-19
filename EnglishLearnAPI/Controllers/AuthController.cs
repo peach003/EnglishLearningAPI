@@ -41,8 +41,8 @@ namespace EnglishLearningAPI.Controllers
             {
                 UserName = model.Email,
                 Email = model.Email,
-                FullName = string.IsNullOrEmpty(model.FullName) ? "Anonymous User" : model.FullName, // 默认值
-                AvatarUrl = "/assets/avatar.png" //  默认头像
+                FullName = string.IsNullOrEmpty(model.FullName) ? "Anonymous User" : model.FullName, 
+                AvatarUrl = "/assets/avatar.png" 
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -115,14 +115,14 @@ namespace EnglishLearningAPI.Controllers
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
     
             var token = new JwtSecurityToken(
-                issuer: jwtSettings["Issuer"], // 发行者
-                audience: jwtSettings["Audience"], // 受众
+                issuer: jwtSettings["Issuer"], 
+                audience: jwtSettings["Audience"], 
                 claims: claims,
-                expires: DateTime.Now.AddHours(2), // 设置有效期为1小时
-                signingCredentials: creds // 签名凭证
+                expires: DateTime.Now.AddHours(2), 
+                signingCredentials: creds 
             );
     
-            return new JwtSecurityTokenHandler().WriteToken(token); // 返回生成的JWT
+            return new JwtSecurityTokenHandler().WriteToken(token); 
         }
 
         private string GenerateJwtToken1(ApplicationUser user)
@@ -146,7 +146,7 @@ namespace EnglishLearningAPI.Controllers
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id), 
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id), // ✅ `sub` 也存 `UserId`
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id), 
                 new Claim(ClaimTypes.Name, user.UserName ?? ""),
                 new Claim("FullName", user.FullName ?? "Anonymous User"),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email ?? ""),
